@@ -13,7 +13,10 @@ io.on("connection", (socket) => {
     console.log(data, "room:join");
     emailToSocketIdMap.set(data?.email, socket?.id);
     socketidToEmailMap.set(socket?.id, data?.email);
+    io.to(room).emit("user:joined", { email, id: socket?.id });
+    socket.join(room);
     console.log(emailToSocketIdMap, ":::::", emailToSocketIdMap);
-    socket.to("room:join", data);
+
+    io.to(socket?.id).emit("room:join", data);
   });
 });
