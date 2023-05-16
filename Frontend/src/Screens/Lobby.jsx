@@ -1,10 +1,24 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useSocket } from "../Context/SocketProvider"
+import { useNavigate } from 'react-router-dom';
 
 const Lobby = () => {
     const [email, setEmail] = useState("");
     const [room, setRoom] = useState("");
     const socket = useSocket();
+    const navigation = useNavigate();
+
+    useEffect(() => {
+        socket.on("room:join", handleJoinRoom)
+        return () => socket.off("room:join", handleJoinRoom)
+    }, [])
+
+
+    const handleJoinRoom = (data) => {
+        const { email, room } = data;
+        console.log(email, "---------", room)
+        navigation(`/room/${room}`)
+    }
 
     const handleSubmitForm = (e) => {
         e.preventDefault()
